@@ -1,8 +1,15 @@
 package com.github.n1try.bakingtime.ui;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.widget.GridView;
 
 import com.github.n1try.bakingtime.R;
@@ -29,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initActionBarStyle();
 
         mApiService = RecipeApiService.getInstance(this);
 
@@ -38,6 +46,15 @@ public class MainActivity extends AppCompatActivity {
         if (isTablet) mRecipeOverviewGv.setNumColumns(getResources().getInteger(R.integer.num_cols_tablet));
 
         new FetchRecipesTask().execute();
+    }
+
+    private void initActionBarStyle() {
+        String appTitle = getResources().getString(R.string.app_name);
+        SpannableStringBuilder spannableBuilder = new SpannableStringBuilder(appTitle);
+        spannableBuilder.setSpan(new TypefaceSpan("casual"), 0, appTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, appTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableBuilder.setSpan(new ForegroundColorSpan(Color.WHITE), 0, appTitle.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        getSupportActionBar().setTitle(spannableBuilder);
     }
 
     class FetchRecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
