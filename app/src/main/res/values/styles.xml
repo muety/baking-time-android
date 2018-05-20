@@ -24,4 +24,9 @@
         <item name="android:shadowDy">0</item>
         <item name="android:shadowRadius">3</item>
     </style>
+
+    <style name="NormalText" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

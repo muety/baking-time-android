@@ -5,11 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -17,9 +15,6 @@ import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.model.RecipeIngredient;
 import com.github.n1try.bakingtime.utils.BasicUtils;
-
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +27,7 @@ public class RecipeDetailFragment extends Fragment {
     GridView stepsList;
 
     private Recipe mRecipe;
-    private ArrayAdapter<String> mStepsAdapter;
+    private RecipeStepsAdapter mStepsAdapter;
     private OnRecipeStepSelectedListener onStepSelectedListener;
 
     public static RecipeDetailFragment newInstance(Recipe recipe) {
@@ -57,14 +52,7 @@ public class RecipeDetailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE_ID);
-        mStepsAdapter = new ArrayAdapter<>(
-                getContext(),
-                android.R.layout.simple_list_item_1,
-                IntStream.range(0, mRecipe.getSteps().size())
-                        .mapToObj(i -> Pair.create(i, mRecipe.getSteps().get(i)))
-                        .map(p -> String.format("%s. %s", p.first, p.second.getShortDescription()))
-                        .collect(Collectors.toList())
-        );
+        mStepsAdapter = new RecipeStepsAdapter(getContext(), mRecipe.getSteps());
         getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName()));
     }
 
@@ -72,6 +60,7 @@ public class RecipeDetailFragment extends Fragment {
     void onItemClick(int position) {
         if (onStepSelectedListener == null) return;
         onStepSelectedListener.onStepSelected(mRecipe, position);
+        mStepsAdapter.setActiveIndex(position);
     }
 
     @Nullable

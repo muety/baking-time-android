@@ -23,7 +23,7 @@
             android:id="@+id/ingredients_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:lineSpacingMultiplier="1.25"
+            android:lineSpacingMultiplier="1.5"
             android:text="TextView" />
 
     </LinearLayout>

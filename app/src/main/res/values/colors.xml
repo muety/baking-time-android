@@ -9,4 +9,6 @@
     <color name="textColorPrimary">#333333</color>
     <color name="textColorSecondary">#333333</color>
     <color name="foreground_material_light">#be1515</color>
+    <color name="colorBackground">#FFFAFAFA</color>
+    <color name="colorBackgroundHighlighted">#dedede</color>
 </resources>

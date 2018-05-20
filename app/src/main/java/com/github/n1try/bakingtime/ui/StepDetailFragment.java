@@ -50,7 +50,7 @@ public class StepDetailFragment extends Fragment {
         mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE_ID);
         mStepIndex = getArguments().getInt(MainActivity.KEY_RECIPE_STEP_INDEX);
         isTablet = getResources().getBoolean(R.bool.is_tablet);
-        getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName() + " - Step " + mStepIndex));
+        getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName() + " - Step " + (mStepIndex + 1)));
     }
 
     @Nullable
