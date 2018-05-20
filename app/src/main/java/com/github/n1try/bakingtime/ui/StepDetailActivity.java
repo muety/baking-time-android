@@ -9,12 +9,13 @@ import android.view.MenuItem;
 
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
+import com.github.n1try.bakingtime.services.RecipeApiService;
 
-public class StepDetailActivity extends AppCompatActivity {
-    private static final String TAG_STEP_DETAIL_FRAGMENT = "step_detail_fragment";
+public class StepDetailActivity extends AppCompatActivity implements StepDetailFragment.OnRecipeStepChangeListener {
     private Recipe mRecipe;
     private int mStepIndex;
     private FragmentManager fragmentManager;
+    private RecipeApiService mRecipeApiService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -25,11 +26,8 @@ public class StepDetailActivity extends AppCompatActivity {
         mStepIndex = getIntent().getIntExtra(MainActivity.KEY_RECIPE_STEP_INDEX, 0);
 
         fragmentManager = getSupportFragmentManager();
-
-        if (fragmentManager.findFragmentByTag(TAG_STEP_DETAIL_FRAGMENT) == null) {
-            Fragment fragment = StepDetailFragment.newInstance(mRecipe, mStepIndex);
-            fragmentManager.beginTransaction().replace(R.id.detail_step_container, fragment, TAG_STEP_DETAIL_FRAGMENT).commit();
-        }
+        mRecipeApiService = RecipeApiService.getInstance(getApplicationContext());
+        spawnFragment();
     }
 
     @Override
@@ -40,5 +38,25 @@ public class StepDetailActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void spawnFragment() {
+        String tag = String.valueOf(mRecipe.getSteps().get(mStepIndex).hashCode());
+        if (fragmentManager.findFragmentByTag(tag) == null) {
+            Fragment fragment = StepDetailFragment.newInstance(mRecipe, mStepIndex);
+            fragmentManager.beginTransaction().replace(R.id.detail_step_container, fragment, tag).commit();
+        }
+    }
+
+    @Override
+    public void onNextStep(int currentStepIndex) {
+        mStepIndex++;
+        spawnFragment();
+    }
+
+    @Override
+    public void onPreviousStep(int currentStepIndex) {
+        mStepIndex--;
+        spawnFragment();
     }
 }

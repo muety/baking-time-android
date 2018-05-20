@@ -29,6 +29,8 @@ public class RecipeApiService {
     private OkHttpClient mHttpClient;
     private Gson mGson;
 
+    private ArrayList<Recipe> recipesCache;
+
     public static RecipeApiService getInstance(Context context) {
         if (ourInstance == null) {
             ourInstance = new RecipeApiService(context);
@@ -53,10 +55,20 @@ public class RecipeApiService {
             ResponseBody body = response.body();
             List<Recipe> recipes = mGson.fromJson(body.string(), recipeListType);
             body.close();
+            recipesCache = new ArrayList<>(recipes);
             return recipes;
         } catch (IOException e) {
             Log.w(getClass().getSimpleName(), "Could not fetch recipes.\n" + e.getMessage());
         }
+        recipesCache = new ArrayList<>();
         return new ArrayList<>();
+    }
+
+    public List<Recipe> getRecipesCache() {
+        return recipesCache;
+    }
+
+    public void invalidateRecipesCache() {
+        recipesCache = null;
     }
 }
