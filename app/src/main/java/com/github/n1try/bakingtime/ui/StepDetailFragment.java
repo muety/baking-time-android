@@ -38,7 +38,7 @@ public class StepDetailFragment extends Fragment {
     public static StepDetailFragment newInstance(Recipe recipe, int stepIndex) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(MainActivity.KEY_RECIPE_ID, recipe);
+        bundle.putParcelable(MainActivity.KEY_RECIPE, recipe);
         bundle.putInt(MainActivity.KEY_RECIPE_STEP_INDEX, stepIndex);
         fragment.setArguments(bundle);
         return fragment;
@@ -47,7 +47,7 @@ public class StepDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE_ID);
+        mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE);
         mStepIndex = getArguments().getInt(MainActivity.KEY_RECIPE_STEP_INDEX);
         isTablet = getResources().getBoolean(R.bool.is_tablet);
         getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName() + " - Step " + (mStepIndex + 1)));

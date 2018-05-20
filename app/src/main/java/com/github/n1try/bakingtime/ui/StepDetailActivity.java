@@ -22,7 +22,7 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
 
-        mRecipe = getIntent().getParcelableExtra(MainActivity.KEY_RECIPE_ID);
+        mRecipe = getIntent().getParcelableExtra(MainActivity.KEY_RECIPE);
         mStepIndex = getIntent().getIntExtra(MainActivity.KEY_RECIPE_STEP_INDEX, 0);
 
         fragmentManager = getSupportFragmentManager();

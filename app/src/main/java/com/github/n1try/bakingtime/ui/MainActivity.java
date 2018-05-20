@@ -19,7 +19,8 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String KEY_RECIPE_ID = "recipe_id";
+    public static final String KEY_RECIPE = "recipe";
+    public static final String KEY_RECIPE_LIST = "recipe_list";
     public static final String KEY_RECIPE_STEP_INDEX = "step_index";
 
     @BindView(R.id.recipe_overview_gv)
@@ -44,14 +45,33 @@ public class MainActivity extends AppCompatActivity {
         mRecipeOverviewGv.setAdapter(mRecipeItemAdapter);
         if (isTablet) mRecipeOverviewGv.setNumColumns(getResources().getInteger(R.integer.num_cols_tablet));
 
-        new FetchRecipesTask().execute();
+        if (savedInstanceState != null) {
+            mRecipes = savedInstanceState.getParcelableArrayList(KEY_RECIPE_LIST);
+            populateAdapter();
+        } else {
+            new FetchRecipesTask().execute();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mRecipes != null) {
+            outState.putParcelableArrayList(KEY_RECIPE_LIST, new ArrayList<>(mRecipes));
+        }
     }
 
     @OnItemClick(R.id.recipe_overview_gv)
     void onItemClick(int position) {
         Intent intent = new Intent(MainActivity.this, RecipeDetailActivity.class);
-        intent.putExtra(KEY_RECIPE_ID, mRecipes.get(position));
+        intent.putExtra(KEY_RECIPE, mRecipes.get(position));
         startActivity(intent);
+    }
+
+    private void populateAdapter() {
+        mRecipeItemAdapter.clear();
+        mRecipeItemAdapter.addAll(mRecipes);
+        mRecipeItemAdapter.notifyDataSetChanged();
     }
 
     class FetchRecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
@@ -63,9 +83,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Recipe> recipes) {
             mRecipes = recipes;
-            mRecipeItemAdapter.clear();
-            mRecipeItemAdapter.addAll(mRecipes);
-            mRecipeItemAdapter.notifyDataSetChanged();
+            populateAdapter();
         }
     }
 }

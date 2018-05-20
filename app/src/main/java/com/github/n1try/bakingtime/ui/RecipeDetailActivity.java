@@ -24,7 +24,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         setContentView(R.layout.activity_detail);
 
         Bundle bundle = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
-        mRecipe = bundle.getParcelable(MainActivity.KEY_RECIPE_ID);
+        mRecipe = bundle.getParcelable(MainActivity.KEY_RECIPE);
         fragmentManager = getSupportFragmentManager();
         isTablet = getResources().getBoolean(R.bool.is_tablet);
 
@@ -39,7 +39,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mRecipe != null) {
-            outState.putParcelable(MainActivity.KEY_RECIPE_ID, mRecipe);
+            outState.putParcelable(MainActivity.KEY_RECIPE, mRecipe);
         }
     }
 
@@ -49,7 +49,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             spawnStepFragment(index);
         } else {
             Intent intent = new Intent(RecipeDetailActivity.this, StepDetailActivity.class);
-            intent.putExtra(MainActivity.KEY_RECIPE_ID, recipe);
+            intent.putExtra(MainActivity.KEY_RECIPE, recipe);
             intent.putExtra(MainActivity.KEY_RECIPE_STEP_INDEX, index);
             startActivity(intent);
         }

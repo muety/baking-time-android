@@ -33,7 +33,7 @@ public class RecipeDetailFragment extends Fragment {
     public static RecipeDetailFragment newInstance(Recipe recipe) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(MainActivity.KEY_RECIPE_ID, recipe);
+        bundle.putParcelable(MainActivity.KEY_RECIPE, recipe);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -51,7 +51,7 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE_ID);
+        mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE);
         mStepsAdapter = new RecipeStepsAdapter(getContext(), mRecipe.getSteps());
         getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName()));
     }
