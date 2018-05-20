@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +16,16 @@ import android.widget.TextView;
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.model.RecipeIngredient;
+import com.github.n1try.bakingtime.utils.BasicUtils;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemClick;
 
-public class DetailOverviewFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment {
     @BindView(R.id.ingredients_tv)
     TextView ingredientsText;
     @BindView(R.id.steps_gv)
@@ -30,13 +33,24 @@ public class DetailOverviewFragment extends Fragment {
 
     private Recipe mRecipe;
     private ArrayAdapter<String> mStepsAdapter;
+    private OnRecipeStepSelectedListener onStepSelectedListener;
 
-    public static DetailOverviewFragment newInstance(Recipe recipe) {
-        DetailOverviewFragment fragment = new DetailOverviewFragment();
+    public static RecipeDetailFragment newInstance(Recipe recipe) {
+        RecipeDetailFragment fragment = new RecipeDetailFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(MainActivity.KEY_RECIPE_ID, recipe);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            onStepSelectedListener = (OnRecipeStepSelectedListener) getActivity();
+        } catch (ClassCastException e) {
+            Log.w(getTag(), "Could not bind OnRecipeStepSelectedListener to fragment");
+        }
     }
 
     @Override
@@ -51,6 +65,13 @@ public class DetailOverviewFragment extends Fragment {
                         .map(p -> String.format("%s. %s", p.first, p.second.getShortDescription()))
                         .collect(Collectors.toList())
         );
+        getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName()));
+    }
+
+    @OnItemClick(R.id.steps_gv)
+    void onItemClick(int position) {
+        if (onStepSelectedListener == null) return;
+        onStepSelectedListener.onStepSelected(mRecipe, position);
     }
 
     @Nullable
@@ -63,5 +84,9 @@ public class DetailOverviewFragment extends Fragment {
         stepsList.setAdapter(mStepsAdapter);
 
         return view;
+    }
+
+    interface OnRecipeStepSelectedListener {
+        void onStepSelected(Recipe recipe, int index);
     }
 }

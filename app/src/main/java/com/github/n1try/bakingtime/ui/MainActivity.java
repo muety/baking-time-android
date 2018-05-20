@@ -20,6 +20,7 @@ import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
     public static final String KEY_RECIPE_ID = "recipe_id";
+    public static final String KEY_RECIPE_STEP_INDEX = "step_index";
 
     @BindView(R.id.recipe_overview_gv)
     GridView mRecipeOverviewGv;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     @OnItemClick(R.id.recipe_overview_gv)
     void onItemClick(int position) {
-        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        Intent intent = new Intent(MainActivity.this, RecipeDetailActivity.class);
         intent.putExtra(KEY_RECIPE_ID, mRecipes.get(position));
         startActivity(intent);
     }
