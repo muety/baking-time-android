@@ -1,5 +1,7 @@
 package com.github.n1try.bakingtime.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -21,6 +23,7 @@ public class Recipe {
     private int id;
     private int servings;
     private String name;
+    @SerializedName("image")
     private String imageUrl;
     private List<RecipeIngredient> ingredients;
     private List<RecipeStep> steps;

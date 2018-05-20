@@ -9,6 +9,7 @@ import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.services.RecipeApiService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -19,16 +20,22 @@ public class MainActivity extends AppCompatActivity {
     GridView mRecipeOverviewGv;
 
     private RecipeApiService mApiService;
+    private RecipeItemAdapter mRecipeItemAdapter;
     private List<Recipe> mRecipes;
+    private boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
 
         mApiService = RecipeApiService.getInstance(this);
+
+        isTablet = getResources().getBoolean(R.bool.is_tablet);
+        mRecipeItemAdapter = new RecipeItemAdapter(this, new ArrayList());
+        mRecipeOverviewGv.setAdapter(mRecipeItemAdapter);
+        if (isTablet) mRecipeOverviewGv.setNumColumns(getResources().getInteger(R.integer.num_cols_tablet));
 
         new FetchRecipesTask().execute();
     }
@@ -42,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Recipe> recipes) {
             mRecipes = recipes;
+            mRecipeItemAdapter.clear();
+            mRecipeItemAdapter.addAll(mRecipes);
+            mRecipeItemAdapter.notifyDataSetChanged();
         }
     }
 }

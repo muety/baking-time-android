@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="default_recipe_images">
+        <item>baking_1</item>
+        <item>baking_2</item>
+        <item>baking_3</item>
+        <item>baking_4</item>
+        <item>baking_5</item>
+    </string-array>
+</resources>

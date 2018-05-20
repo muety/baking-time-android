@@ -8,4 +8,5 @@
     <color name="colorSecondaryDark">#c6a700</color>
     <color name="textColorPrimary">#333333</color>
     <color name="textColorSecondary">#333333</color>
+    <color name="foreground_material_light">#be1515</color>
 </resources>
