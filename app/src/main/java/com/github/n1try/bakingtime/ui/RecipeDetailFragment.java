@@ -1,6 +1,8 @@
 package com.github.n1try.bakingtime.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -15,6 +17,10 @@ import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.model.RecipeIngredient;
 import com.github.n1try.bakingtime.utils.BasicUtils;
+import com.github.n1try.bakingtime.utils.Constants;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +40,7 @@ public class RecipeDetailFragment extends Fragment {
     public static RecipeDetailFragment newInstance(Recipe recipe) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(MainActivity.KEY_RECIPE, recipe);
+        bundle.putParcelable(Constants.KEY_RECIPE, recipe);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -52,10 +58,18 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE);
+        mRecipe = getArguments().getParcelable(Constants.KEY_RECIPE);
         mStepsAdapter = new RecipeStepsAdapter(getContext(), mRecipe.getSteps());
         getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName()));
         isTablet = getResources().getBoolean(R.bool.is_tablet);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        Set<String> formattedIngredients = mRecipe.getIngredients().stream()
+                .map(RecipeIngredient::toString)
+                .collect(Collectors.toSet());
+        sharedPreferences.edit().putInt(Constants.PREF_KEY_LAST_RECIPE_ID, mRecipe.getId()).apply();
+        sharedPreferences.edit().putString(Constants.PREF_KEY_LAST_RECIPE_NAME, mRecipe.getName()).apply();
+        sharedPreferences.edit().putStringSet(Constants.PREF_KEY_LAST_RECIPE_INGREDIENTS, formattedIngredients).apply();
     }
 
     @OnItemClick(R.id.steps_gv)

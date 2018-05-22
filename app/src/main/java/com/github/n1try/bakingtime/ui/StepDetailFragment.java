@@ -18,6 +18,7 @@ import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.model.RecipeStep;
 import com.github.n1try.bakingtime.utils.BasicUtils;
+import com.github.n1try.bakingtime.utils.Constants;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -71,8 +72,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     public static StepDetailFragment newInstance(Recipe recipe, int stepIndex) {
         StepDetailFragment fragment = new StepDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(MainActivity.KEY_RECIPE, recipe);
-        bundle.putInt(MainActivity.KEY_RECIPE_STEP_INDEX, stepIndex);
+        bundle.putParcelable(Constants.KEY_RECIPE, recipe);
+        bundle.putInt(Constants.KEY_RECIPE_STEP_INDEX, stepIndex);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -80,8 +81,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE);
-        mStepIndex = getArguments().getInt(MainActivity.KEY_RECIPE_STEP_INDEX);
+        mRecipe = getArguments().getParcelable(Constants.KEY_RECIPE);
+        mStepIndex = getArguments().getInt(Constants.KEY_RECIPE_STEP_INDEX);
         mStep = mRecipe.getSteps().get(mStepIndex);
         isTablet = getResources().getBoolean(R.bool.is_tablet);
         getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName() + " - Step " + (mStepIndex + 1)));

@@ -12,6 +12,7 @@ import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.services.RecipeApiService;
 import com.github.n1try.bakingtime.utils.BasicUtils;
+import com.github.n1try.bakingtime.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,6 @@ import butterknife.ButterKnife;
 import butterknife.OnItemClick;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String KEY_RECIPE = "recipe";
-    public static final String KEY_RECIPE_LIST = "recipe_list";
-    public static final String KEY_RECIPE_STEP_INDEX = "step_index";
-
     @BindView(R.id.offline_container)
     View mOfflineContainer;
     @BindView(R.id.recipe_overview_gv)
@@ -51,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         if (isTablet) mRecipeOverviewGv.setNumColumns(getResources().getInteger(R.integer.num_cols_tablet));
 
         if (savedInstanceState != null) {
-            mRecipes = savedInstanceState.getParcelableArrayList(KEY_RECIPE_LIST);
+            mRecipes = savedInstanceState.getParcelableArrayList(Constants.KEY_RECIPE_LIST);
             populateAdapter();
         } else {
             if (BasicUtils.isNetworkAvailable(this)) {
@@ -67,14 +64,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mRecipes != null) {
-            outState.putParcelableArrayList(KEY_RECIPE_LIST, new ArrayList<>(mRecipes));
+            outState.putParcelableArrayList(Constants.KEY_RECIPE_LIST, new ArrayList<>(mRecipes));
         }
     }
 
     @OnItemClick(R.id.recipe_overview_gv)
     void onItemClick(int position) {
         Intent intent = new Intent(MainActivity.this, RecipeDetailActivity.class);
-        intent.putExtra(KEY_RECIPE, mRecipes.get(position));
+        intent.putExtra(Constants.KEY_RECIPE, mRecipes.get(position));
         startActivity(intent);
     }
 

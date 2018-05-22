@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
@@ -66,6 +67,13 @@ public class RecipeApiService {
 
     public List<Recipe> getRecipesCache() {
         return recipesCache;
+    }
+
+    public Optional<Recipe> getOrFetchById(int id) {
+        if (recipesCache == null || recipesCache.isEmpty()) {
+            fetchRecipes();
+        }
+        return recipesCache.stream().filter(r -> r.getId() == id).findFirst();
     }
 
     public void invalidateRecipesCache() {

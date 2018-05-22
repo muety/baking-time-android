@@ -14,6 +14,9 @@ My implementation of Project 3 from the [Udacity Android Developer Nanodegree Pr
 * Improved offline support
 * Improved caching
 * Improved design
+* Better exception / edge case handling
+* Include [Configuration Activity](https://developer.android.com/guide/topics/appwidgets/#Configuring) for widget
+* Use a (scrollable) `ListView` in the widget
 
 ## Screenshots
 ![](https://anchr.io/i/yXFco.png)![](https://anchr.io/i/r2OCN.png)

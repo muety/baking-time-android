@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
+import com.github.n1try.bakingtime.utils.Constants;
 
 public class StepDetailActivity extends AppCompatActivity implements StepDetailFragment.OnRecipeStepChangeListener {
     private Recipe mRecipe;
@@ -21,8 +22,8 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
         setContentView(R.layout.activity_step_detail);
 
         Bundle bundle = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
-        mRecipe = bundle.getParcelable(MainActivity.KEY_RECIPE);
-        mStepIndex = bundle.getInt(MainActivity.KEY_RECIPE_STEP_INDEX, 0);
+        mRecipe = bundle.getParcelable(Constants.KEY_RECIPE);
+        mStepIndex = bundle.getInt(Constants.KEY_RECIPE_STEP_INDEX, 0);
 
         fragmentManager = getSupportFragmentManager();
         spawnFragment();
@@ -31,8 +32,8 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(MainActivity.KEY_RECIPE, mRecipe);
-        outState.putInt(MainActivity.KEY_RECIPE_STEP_INDEX, mStepIndex);
+        outState.putParcelable(Constants.KEY_RECIPE, mRecipe);
+        outState.putInt(Constants.KEY_RECIPE_STEP_INDEX, mStepIndex);
     }
 
     @Override

@@ -10,11 +10,14 @@ import android.view.MenuItem;
 
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
+import com.github.n1try.bakingtime.services.RecipeApiService;
+import com.github.n1try.bakingtime.utils.Constants;
 
 public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnRecipeStepSelectedListener, StepDetailFragment.OnRecipeStepChangeListener {
     private static final String TAG_DETAIL_FRAGMENT = "detail_fragment";
-    private static final String TAG_STEP_DETAIL_FRAGMENT = "step_detail_fragment";
-    private FragmentManager fragmentManager;
+
+    private FragmentManager mFragmentManager;
+    private RecipeApiService mApiService;
     private boolean isTablet;
     private Recipe mRecipe;
 
@@ -23,14 +26,20 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        mApiService = RecipeApiService.getInstance(getApplicationContext());
+
         Bundle bundle = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
-        mRecipe = bundle.getParcelable(MainActivity.KEY_RECIPE);
-        fragmentManager = getSupportFragmentManager();
+        if (bundle.containsKey(Constants.KEY_RECIPE)) {
+            mRecipe = bundle.getParcelable(Constants.KEY_RECIPE);
+        } else if (bundle.containsKey(Constants.KEY_RECIPE_ID)) {
+            mRecipe = mApiService.getOrFetchById(bundle.getInt(Constants.KEY_RECIPE_ID)).get(); // handle null case
+        }
+        mFragmentManager = getSupportFragmentManager();
         isTablet = getResources().getBoolean(R.bool.is_tablet);
 
-        if (fragmentManager.findFragmentByTag(TAG_DETAIL_FRAGMENT) == null) {
+        if (mFragmentManager.findFragmentByTag(TAG_DETAIL_FRAGMENT) == null) {
             Fragment fragment = RecipeDetailFragment.newInstance(mRecipe);
-            fragmentManager.beginTransaction().replace(R.id.detail_overview_container, fragment, TAG_DETAIL_FRAGMENT).commit();
+            mFragmentManager.beginTransaction().replace(R.id.detail_overview_container, fragment, TAG_DETAIL_FRAGMENT).commit();
         }
     }
 
@@ -38,7 +47,7 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mRecipe != null) {
-            outState.putParcelable(MainActivity.KEY_RECIPE, mRecipe);
+            outState.putParcelable(Constants.KEY_RECIPE, mRecipe);
         }
     }
 
@@ -48,17 +57,17 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             spawnStepFragment(index);
         } else {
             Intent intent = new Intent(RecipeDetailActivity.this, StepDetailActivity.class);
-            intent.putExtra(MainActivity.KEY_RECIPE, recipe);
-            intent.putExtra(MainActivity.KEY_RECIPE_STEP_INDEX, index);
+            intent.putExtra(Constants.KEY_RECIPE, recipe);
+            intent.putExtra(Constants.KEY_RECIPE_STEP_INDEX, index);
             startActivity(intent);
         }
     }
 
     private void spawnStepFragment(int stepIndex) {
         String tag = String.valueOf(mRecipe.getSteps().get(stepIndex).hashCode());
-        if (fragmentManager.findFragmentByTag(tag) == null) {
+        if (mFragmentManager.findFragmentByTag(tag) == null) {
             Fragment fragment = StepDetailFragment.newInstance(mRecipe, stepIndex);
-            fragmentManager.beginTransaction().replace(R.id.detail_step_container, fragment, tag).commit();
+            mFragmentManager.beginTransaction().replace(R.id.detail_step_container, fragment, tag).commit();
         }
     }
 

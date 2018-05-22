@@ -33,6 +33,18 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.RecipeDetailActivity" />
         </activity>
+
+        <receiver android:name=".ui.widget.IngredientsWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/ingredients_widget_info" />
+        </receiver>
+
+        <service android:name=".ui.widget.RecipeIngredientService" />
     </application>
 
 </manifest>
