@@ -87,6 +87,7 @@ public class RecipeDetailFragment extends Fragment {
 
         ingredientsText.setText(TextUtils.concat((CharSequence[]) mRecipe.getIngredients().stream().map(RecipeIngredient::format).toArray(i -> new CharSequence[i])));
         stepsList.setAdapter(mStepsAdapter);
+        BasicUtils.justifyListViewHeightBasedOnChildren(stepsList);
         if (isTablet) onItemClick(0);
         return view;
     }
