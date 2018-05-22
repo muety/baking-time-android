@@ -3,6 +3,7 @@ package com.github.n1try.bakingtime.ui;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -104,7 +105,9 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             nextFab.setVisibility(View.GONE);
 
         if (!TextUtils.isEmpty(step.getVideoUrl())) {
-            initPlayer(Uri.parse(mStep.getVideoUrl()));
+            long startPosition = savedInstanceState != null ? savedInstanceState.getLong(Constants.KEY_PLAYER_POSITION) : 0;
+            boolean playWhenReady = savedInstanceState != null ? savedInstanceState.getBoolean(Constants.KEY_PLAYER_PLAY_STATE) : true;
+            initPlayer(Uri.parse(mStep.getVideoUrl()), playWhenReady, startPosition);
         } else {
             showThumbnail();
         }
@@ -128,6 +131,15 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         super.onPause();
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mPlayer != null) {
+            outState.putLong(Constants.KEY_PLAYER_POSITION, mPlayer.getCurrentPosition());
+            outState.putBoolean(Constants.KEY_PLAYER_PLAY_STATE, mPlayer.getPlayWhenReady());
+        }
+    }
+
     @OnClick(R.id.next_step_fab)
     void nextStep() {
         mOnRecipeStepChangeListener.onNextStep(mStepIndex);
@@ -138,7 +150,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mOnRecipeStepChangeListener.onPreviousStep(mStepIndex);
     }
 
-    private void initPlayer(Uri mediaUri) {
+    private void initPlayer(Uri mediaUri, boolean playWhenReady, long startPosition) {
         if (mPlayer == null) {
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                     getContext(),
@@ -158,7 +170,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             ExtractorMediaSource.Factory mediaSourceFactory = new ExtractorMediaSource.Factory(dataSourceFactory);
             MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaUri);
             mPlayer.prepare(mediaSource);
-            mPlayer.setPlayWhenReady(true);
+            mPlayer.seekTo(startPosition);
+            mPlayer.setPlayWhenReady(playWhenReady);
         }
     }
 
@@ -166,7 +179,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         if (mPlayer == null) return;
         mPlayer.stop();
         mPlayer.release();
-        mPlayer = null;
     }
 
     private void showPlayer() {
