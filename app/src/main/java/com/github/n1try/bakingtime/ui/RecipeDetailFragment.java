@@ -29,6 +29,7 @@ public class RecipeDetailFragment extends Fragment {
     private Recipe mRecipe;
     private RecipeStepsAdapter mStepsAdapter;
     private OnRecipeStepSelectedListener onStepSelectedListener;
+    private boolean isTablet;
 
     public static RecipeDetailFragment newInstance(Recipe recipe) {
         RecipeDetailFragment fragment = new RecipeDetailFragment();
@@ -54,13 +55,14 @@ public class RecipeDetailFragment extends Fragment {
         mRecipe = getArguments().getParcelable(MainActivity.KEY_RECIPE);
         mStepsAdapter = new RecipeStepsAdapter(getContext(), mRecipe.getSteps());
         getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName()));
+        isTablet = getResources().getBoolean(R.bool.is_tablet);
     }
 
     @OnItemClick(R.id.steps_gv)
     void onItemClick(int position) {
         if (onStepSelectedListener == null) return;
         onStepSelectedListener.onStepSelected(mRecipe, position);
-        mStepsAdapter.setActiveIndex(position);
+        if (isTablet) mStepsAdapter.setActiveIndex(position);
     }
 
     @Nullable
@@ -71,7 +73,7 @@ public class RecipeDetailFragment extends Fragment {
 
         ingredientsText.setText(TextUtils.concat((CharSequence[]) mRecipe.getIngredients().stream().map(RecipeIngredient::format).toArray(i -> new CharSequence[i])));
         stepsList.setAdapter(mStepsAdapter);
-
+        if (isTablet) onItemClick(0);
         return view;
     }
 

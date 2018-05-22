@@ -17,7 +17,7 @@ import java.util.List;
 public class RecipeStepsAdapter extends ArrayAdapter<RecipeStep> {
     private Context context;
     private List<RecipeStep> steps;
-    private int activeIndex = 0;
+    private int activeIndex = -1;
 
     public RecipeStepsAdapter(@NonNull Context context, @NonNull List<RecipeStep> steps) {
         super(context, 0, steps);

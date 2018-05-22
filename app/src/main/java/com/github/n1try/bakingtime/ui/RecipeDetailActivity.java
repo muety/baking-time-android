@@ -32,7 +32,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             Fragment fragment = RecipeDetailFragment.newInstance(mRecipe);
             fragmentManager.beginTransaction().replace(R.id.detail_overview_container, fragment, TAG_DETAIL_FRAGMENT).commit();
         }
-        spawnStepFragment(0);
     }
 
     @Override
