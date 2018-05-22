@@ -9,25 +9,30 @@ import android.view.MenuItem;
 
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
-import com.github.n1try.bakingtime.services.RecipeApiService;
 
 public class StepDetailActivity extends AppCompatActivity implements StepDetailFragment.OnRecipeStepChangeListener {
     private Recipe mRecipe;
     private int mStepIndex;
     private FragmentManager fragmentManager;
-    private RecipeApiService mRecipeApiService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_detail);
 
-        mRecipe = getIntent().getParcelableExtra(MainActivity.KEY_RECIPE);
-        mStepIndex = getIntent().getIntExtra(MainActivity.KEY_RECIPE_STEP_INDEX, 0);
+        Bundle bundle = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
+        mRecipe = bundle.getParcelable(MainActivity.KEY_RECIPE);
+        mStepIndex = bundle.getInt(MainActivity.KEY_RECIPE_STEP_INDEX, 0);
 
         fragmentManager = getSupportFragmentManager();
-        mRecipeApiService = RecipeApiService.getInstance(getApplicationContext());
         spawnFragment();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(MainActivity.KEY_RECIPE, mRecipe);
+        outState.putInt(MainActivity.KEY_RECIPE_STEP_INDEX, mStepIndex);
     }
 
     @Override
