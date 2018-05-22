@@ -83,7 +83,10 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mStepIndex = getArguments().getInt(Constants.KEY_RECIPE_STEP_INDEX);
         mStep = mRecipe.getSteps().get(mStepIndex);
         isTablet = getResources().getBoolean(R.bool.is_tablet);
-        getActivity().setTitle(BasicUtils.styleTitle(mRecipe.getName() + " - Step " + (mStepIndex + 1)));
+        StringBuilder builder = new StringBuilder(mRecipe.getName())
+                .append(" - ").append(getResources().getString(R.string.step)).append(" ")
+                .append(mStepIndex + 1);
+        getActivity().setTitle(BasicUtils.styleTitle(builder.toString()));
     }
 
     @Nullable
