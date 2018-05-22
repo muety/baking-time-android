@@ -14,8 +14,6 @@ import com.github.n1try.bakingtime.services.RecipeApiService;
 import com.github.n1try.bakingtime.utils.Constants;
 
 public class RecipeDetailActivity extends AppCompatActivity implements RecipeDetailFragment.OnRecipeStepSelectedListener, StepDetailFragment.OnRecipeStepChangeListener {
-    private static final String TAG_DETAIL_FRAGMENT = "detail_fragment";
-
     private FragmentManager mFragmentManager;
     private RecipeApiService mApiService;
     private boolean isTablet;
@@ -37,9 +35,9 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
         mFragmentManager = getSupportFragmentManager();
         isTablet = getResources().getBoolean(R.bool.is_tablet);
 
-        if (mFragmentManager.findFragmentByTag(TAG_DETAIL_FRAGMENT) == null) {
+        if (mFragmentManager.findFragmentByTag(Constants.TAG_DETAIL_FRAGMENT) == null) {
             Fragment fragment = RecipeDetailFragment.newInstance(mRecipe);
-            mFragmentManager.beginTransaction().replace(R.id.detail_overview_container, fragment, TAG_DETAIL_FRAGMENT).commit();
+            mFragmentManager.beginTransaction().replace(R.id.detail_overview_container, fragment, Constants.TAG_DETAIL_FRAGMENT).commit();
         }
     }
 

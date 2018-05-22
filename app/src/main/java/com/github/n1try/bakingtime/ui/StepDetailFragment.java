@@ -46,8 +46,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class StepDetailFragment extends Fragment implements Player.EventListener {
-    private static final float MAX_LOADING_TIME_SECS = 2.5f;
-
     @BindView(R.id.next_step_fab)
     FloatingActionButton nextFab;
     @BindView(R.id.prev_step_fab)
@@ -210,7 +208,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
                     showThumbnail();
                 }
             };
-            mHandler.postDelayed(checkBuffering, Math.round(MAX_LOADING_TIME_SECS * 1000));
+            mHandler.postDelayed(checkBuffering, Math.round(Constants.VIDEO_MAX_LOADING_TIME_SECS * 1000));
         }
         if (!isPlayerShown() && playWhenReady) showPlayer();
     }

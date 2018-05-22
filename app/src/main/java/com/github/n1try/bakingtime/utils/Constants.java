@@ -9,4 +9,7 @@ public class Constants {
     public static final String KEY_RECIPE_LIST = "recipe_list";
     public static final String KEY_RECIPE_STEP_INDEX = "step_index";
     public static final String KEY_RECIPE_ID = "recipe_id";
+    public static final String TAG_DETAIL_FRAGMENT = "detail_fragment";
+
+    public static final float VIDEO_MAX_LOADING_TIME_SECS = 3f;
 }
