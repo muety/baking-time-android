@@ -67,6 +67,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     private boolean isTablet;
     private ExoPlayer mPlayer;
     private Handler mHandler;
+    private long mPlayerStartPosition = 0;
+    private boolean mPlayerPlayWhenReady = true;
 
     public static StepDetailFragment newInstance(Recipe recipe, int stepIndex) {
         StepDetailFragment fragment = new StepDetailFragment();
@@ -101,15 +103,11 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         stepInstructionsTitle.setText(step.getShortDescription());
 
         if (mStepIndex == 0 || isTablet) prevFab.setVisibility(View.GONE);
-        if (mStepIndex == mRecipe.getSteps().size() - 1 || isTablet)
-            nextFab.setVisibility(View.GONE);
+        if (mStepIndex == mRecipe.getSteps().size() - 1 || isTablet) nextFab.setVisibility(View.GONE);
 
-        if (!TextUtils.isEmpty(step.getVideoUrl())) {
-            long startPosition = savedInstanceState != null ? savedInstanceState.getLong(Constants.KEY_PLAYER_POSITION) : 0;
-            boolean playWhenReady = savedInstanceState != null ? savedInstanceState.getBoolean(Constants.KEY_PLAYER_PLAY_STATE) : true;
-            initPlayer(Uri.parse(mStep.getVideoUrl()), playWhenReady, startPosition);
-        } else {
-            showThumbnail();
+        if (savedInstanceState != null) {
+            mPlayerStartPosition = savedInstanceState.getLong(Constants.KEY_PLAYER_POSITION, mPlayerStartPosition);
+            mPlayerPlayWhenReady = savedInstanceState.getBoolean(Constants.KEY_PLAYER_PLAY_STATE, mPlayerPlayWhenReady);
         }
 
         return view;
@@ -126,7 +124,22 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
     }
 
     @Override
+    public void onResume() {
+        mPlayer = null;
+        if (!TextUtils.isEmpty(mStep.getVideoUrl())) {
+            initPlayer(Uri.parse(mStep.getVideoUrl()));
+        } else {
+            showThumbnail();
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onPause() {
+        if (mPlayer != null) {
+            mPlayerPlayWhenReady = mPlayer.getPlayWhenReady();
+            mPlayerStartPosition = mPlayer.getCurrentPosition();
+        }
         releasePlayer();
         super.onPause();
     }
@@ -150,7 +163,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         mOnRecipeStepChangeListener.onPreviousStep(mStepIndex);
     }
 
-    private void initPlayer(Uri mediaUri, boolean playWhenReady, long startPosition) {
+    private void initPlayer(Uri mediaUri) {
         if (mPlayer == null) {
             DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                     getContext(),
@@ -170,8 +183,8 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
             ExtractorMediaSource.Factory mediaSourceFactory = new ExtractorMediaSource.Factory(dataSourceFactory);
             MediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaUri);
             mPlayer.prepare(mediaSource);
-            mPlayer.seekTo(startPosition);
-            mPlayer.setPlayWhenReady(playWhenReady);
+            mPlayer.seekTo(mPlayerStartPosition);
+            mPlayer.setPlayWhenReady(mPlayerPlayWhenReady);
         }
     }
 
