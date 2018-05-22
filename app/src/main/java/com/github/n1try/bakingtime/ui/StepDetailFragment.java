@@ -1,14 +1,11 @@
 package com.github.n1try.bakingtime.ui;
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -185,10 +182,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         if (!TextUtils.isEmpty(mStep.getThumbnailUrl())) {
             Picasso.with(getContext()).load(mStep.getThumbnailUrl()).into(thumbnailView);
             thumbnailView.setPadding(0, 0, 0, 0);
-        } else {
-            Drawable icon = thumbnailView.getDrawable(); // placeholder icon
-            icon.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark), PorterDuff.Mode.SRC_IN);
-            thumbnailView.setImageDrawable(icon);
         }
     }
 
@@ -210,6 +203,7 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
         if (mHandler == null) {
             mHandler = new Handler();
             Runnable checkBuffering = () -> {
+                if (mPlayer == null) return;
                 if (mPlayer.getBufferedPercentage() < 10) {
                     releasePlayer();
                     showThumbnail();
@@ -244,7 +238,6 @@ public class StepDetailFragment extends Fragment implements Player.EventListener
 
     @Override
     public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-        System.out.println(1);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.github.n1try.bakingtime.ui;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
 
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        getSupportActionBar().setTitle(BasicUtils.styleTitle(getResources().getString(R.string.app_name)));
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(BasicUtils.styleTitle(getResources().getString(R.string.app_name)));
 
         mApiService = RecipeApiService.getInstance(this);
 

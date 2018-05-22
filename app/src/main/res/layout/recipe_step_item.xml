@@ -3,15 +3,43 @@
     android:id="@+id/step_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="false"
+    android:focusable="false"
+    android:longClickable="false"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/step_title_tv"
-        style="@style/NormalText"
+    <LinearLayout
+        android:id="@+id/inner_step_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="8dp"
-        android:lineSpacingMultiplier="1.5"
-        android:text="TextView" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@drawable/rounded_box"
+        android:orientation="horizontal"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <TextView
+            android:id="@+id/step_index_tv"
+            style="@style/NormalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/step_title_tv"
+            style="@style/NormalText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:lineSpacingMultiplier="1.5"
+            android:text="TextView" />
+    </LinearLayout>
+
 </LinearLayout>

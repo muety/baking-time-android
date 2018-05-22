@@ -38,14 +38,16 @@ public class RecipeStepsAdapter extends ArrayAdapter<RecipeStep> {
         }
 
         RecipeStep step = getItem(position);
-        View stepContainer = convertView.findViewById(R.id.step_container);
+        View innerStepContainer = convertView.findViewById(R.id.inner_step_container);
         TextView stepTitle = convertView.findViewById(R.id.step_title_tv);
-        stepTitle.setText((position + 1) + ". " + step.getShortDescription());
+        TextView stepIndex = convertView.findViewById(R.id.step_index_tv);
+        stepIndex.setText(String.valueOf(position + 1));
+        stepTitle.setText(step.getShortDescription());
 
         if (position == activeIndex) {
-            stepContainer.setBackgroundColor(context.getResources().getColor(R.color.colorBackgroundHighlighted));
+            innerStepContainer.setBackground(context.getDrawable(R.drawable.rounded_box_filled));
         } else {
-            stepContainer.setBackgroundColor(context.getResources().getColor(R.color.colorBackground));
+            innerStepContainer.setBackground(context.getDrawable(R.drawable.rounded_box));
         }
 
         return convertView;
