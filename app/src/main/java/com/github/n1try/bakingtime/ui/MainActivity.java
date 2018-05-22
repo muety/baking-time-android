@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.GridView;
 
 import com.github.n1try.bakingtime.R;
@@ -24,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String KEY_RECIPE_LIST = "recipe_list";
     public static final String KEY_RECIPE_STEP_INDEX = "step_index";
 
+    @BindView(R.id.offline_container)
+    View mOfflineContainer;
     @BindView(R.id.recipe_overview_gv)
     GridView mRecipeOverviewGv;
 
@@ -51,7 +54,12 @@ public class MainActivity extends AppCompatActivity {
             mRecipes = savedInstanceState.getParcelableArrayList(KEY_RECIPE_LIST);
             populateAdapter();
         } else {
-            new FetchRecipesTask().execute();
+            if (BasicUtils.isNetworkAvailable(this)) {
+                new FetchRecipesTask().execute();
+            } else {
+                mRecipeOverviewGv.setVisibility(View.GONE);
+                mOfflineContainer.setVisibility(View.VISIBLE);
+            }
         }
     }
 

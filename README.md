@@ -1,10 +1,22 @@
 # baking-time-android
-
-![](https://anchr.io/i/nQ6GT.png) ![](https://anchr.io/i/pbJYC.png)
+![](https://anchr.io/i/60MVG.png)
 
 My implementation of Project 3 from the [Udacity Android Developer Nanodegree Program](https://classroom.udacity.com/nanodegrees/nd801), which I am able to participate in thanks to a scholarship by Udacity and Google 🤗.
 
 **This is still work in progress!**
+
+## Features
+* Integrated video player
+* Home screen widget
+* Responsive layouts
+
+## Improvement suggestions
+* Improved offline support
+* Improved caching
+* Improved design
+
+## Screenshots
+![](https://anchr.io/i/yXFco.png)![](https://anchr.io/i/r2OCN.png)
 
 ## How tun run?
 1. Enable annotation preprocessing in Android Studio.
