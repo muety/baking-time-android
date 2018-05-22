@@ -17,6 +17,8 @@ My implementation of Project 3 from the [Udacity Android Developer Nanodegree Pr
 * Better exception / edge case handling
 * Include [Configuration Activity](https://developer.android.com/guide/topics/appwidgets/#Configuring) for widget
 * Use a (scrollable) `ListView` in the widget
+* Test more sensibly
+* Mock API in tests
 
 ## Screenshots
 ![](https://anchr.io/i/yXFco.png)![](https://anchr.io/i/r2OCN.png)

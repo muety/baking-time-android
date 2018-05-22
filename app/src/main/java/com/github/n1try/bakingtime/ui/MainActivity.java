@@ -3,6 +3,10 @@ package com.github.n1try.bakingtime.ui;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private RecipeItemAdapter mRecipeItemAdapter;
     private List<Recipe> mRecipes;
     private boolean isTablet;
+    private CountingIdlingResource mIdlingResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setTitle(BasicUtils.styleTitle(getResources().getString(R.string.app_name)));
 
         mApiService = RecipeApiService.getInstance(this);
+        getIdlingResource();
 
         isTablet = getResources().getBoolean(R.bool.is_tablet);
         mRecipeItemAdapter = new RecipeItemAdapter(this, new ArrayList());
@@ -53,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             if (BasicUtils.isNetworkAvailable(this)) {
                 new FetchRecipesTask().execute();
+                mIdlingResource.increment();
             } else {
                 mRecipeOverviewGv.setVisibility(View.GONE);
                 mOfflineContainer.setVisibility(View.VISIBLE);
@@ -81,6 +88,15 @@ public class MainActivity extends AppCompatActivity {
         mRecipeItemAdapter.notifyDataSetChanged();
     }
 
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new CountingIdlingResource(getLocalClassName());
+        }
+        return mIdlingResource;
+    }
+
     class FetchRecipesTask extends AsyncTask<Void, Void, List<Recipe>> {
         @Override
         protected List<Recipe> doInBackground(Void... voids) {
@@ -91,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(List<Recipe> recipes) {
             mRecipes = recipes;
             populateAdapter();
+            mIdlingResource.decrement();
         }
     }
 }
