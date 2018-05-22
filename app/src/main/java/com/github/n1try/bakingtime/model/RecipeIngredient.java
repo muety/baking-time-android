@@ -8,7 +8,6 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 
 import com.github.n1try.bakingtime.utils.SerializationUtils;
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
@@ -37,13 +36,15 @@ public class RecipeIngredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        Gson gson = SerializationUtils.getInstance().gsonBuilder.create();
-        parcel.writeString(gson.toJson(this));
+        parcel.writeString(SerializationUtils.serialize(this));
     }
 
     private static RecipeIngredient readFromParcel(Parcel parcel) {
-        Gson gson = SerializationUtils.getInstance().gsonBuilder.create();
-        return gson.fromJson(parcel.readString(), RecipeIngredient.class);
+        try {
+            return SerializationUtils.deserialize(parcel.readString(), RecipeIngredient.class);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
     public static final Creator<RecipeIngredient> CREATOR = new Creator<RecipeIngredient>() {

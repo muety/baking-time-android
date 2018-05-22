@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.github.n1try.bakingtime.utils.SerializationUtils;
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -40,13 +39,15 @@ public class Recipe implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        Gson gson = SerializationUtils.getInstance().gsonBuilder.create();
-        parcel.writeString(gson.toJson(this));
+        parcel.writeString(SerializationUtils.serialize(this));
     }
 
     private static Recipe readFromParcel(Parcel parcel) {
-        Gson gson = SerializationUtils.getInstance().gsonBuilder.create();
-        return gson.fromJson(parcel.readString(), Recipe.class);
+        try {
+            return SerializationUtils.deserialize(parcel.readString(), Recipe.class);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
     }
 
     public static final Creator<Recipe> CREATOR = new Creator<Recipe>() {

@@ -8,7 +8,6 @@ import android.util.Log;
 import com.github.n1try.bakingtime.model.Recipe;
 import com.github.n1try.bakingtime.model.RecipeStep;
 import com.github.n1try.bakingtime.utils.SerializationUtils;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
@@ -34,8 +33,6 @@ public class RecipeApiService {
     }.getType();
 
     private OkHttpClient mHttpClient;
-    private Gson mGson;
-
     private ArrayList<Recipe> recipesCache;
 
     public static RecipeApiService getInstance(Context context) {
@@ -49,7 +46,6 @@ public class RecipeApiService {
         mHttpClient = new OkHttpClient.Builder()
                 .cache(new Cache(context.getCacheDir(), 1024 * 1014 * 10))
                 .build();
-        mGson = SerializationUtils.getInstance().gsonBuilder.create();
     }
 
     public List<Recipe> fetchRecipes() {
@@ -60,9 +56,9 @@ public class RecipeApiService {
             Response response = mHttpClient.newCall(request).execute();
             if (!response.isSuccessful()) throw new IOException(response.message());
             ResponseBody body = response.body();
-            List<Recipe> recipes = ((List<Recipe>) mGson.fromJson(body.string(), recipeListType))
+            List<Recipe> recipes = SerializationUtils.deserializeList(body.string(), recipeListType)
                     .stream()
-                    .map(r -> tryHealConfusedLinks(r))
+                    .map(r -> tryHealConfusedLinks((Recipe) r))
                     .collect(Collectors.toList());
             body.close();
             recipesCache = new ArrayList<>(recipes);
