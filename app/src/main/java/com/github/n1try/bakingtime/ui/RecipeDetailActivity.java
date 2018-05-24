@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
@@ -67,16 +66,6 @@ public class RecipeDetailActivity extends AppCompatActivity implements RecipeDet
             Fragment fragment = StepDetailFragment.newInstance(mRecipe, stepIndex);
             mFragmentManager.beginTransaction().replace(R.id.detail_step_container, fragment, tag).commit();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

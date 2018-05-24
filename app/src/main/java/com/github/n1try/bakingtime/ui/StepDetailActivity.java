@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 import com.github.n1try.bakingtime.R;
 import com.github.n1try.bakingtime.model.Recipe;
@@ -34,16 +33,6 @@ public class StepDetailActivity extends AppCompatActivity implements StepDetailF
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.KEY_RECIPE, mRecipe);
         outState.putInt(Constants.KEY_RECIPE_STEP_INDEX, mStepIndex);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void spawnFragment() {
